@@ -1,0 +1,2 @@
+namespace: product-api-staging
+resources: [../../base, namespace.yaml]

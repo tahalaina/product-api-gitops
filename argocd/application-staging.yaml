@@ -1,0 +1,7 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: {name: product-api-staging, namespace: argocd}
+spec:
+  project: product-api
+  source: {repoURL: https://github.com/tahalaina/product-api-gitops.git, targetRevision: main, path: apps/product-api/overlays/staging}
+  destination: {server: https://kubernetes.default.svc, namespace: product-api-staging}

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: product-api
+  namespace: argocd
+spec:
+  description: Product API GitOps applications
+  sourceRepos: [https://github.com/tahalaina/product-api-gitops.git]
+  destinations:
+    - namespace: product-api-dev
+      server: https://kubernetes.default.svc
+    - namespace: product-api-staging
+      server: https://kubernetes.default.svc
+    - namespace: product-api-production
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace

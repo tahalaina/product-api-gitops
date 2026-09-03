@@ -1,0 +1,2 @@
+namespace: product-api-production
+resources: [../../base, namespace.yaml]

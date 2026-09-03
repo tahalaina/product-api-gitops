@@ -1,0 +1,8 @@
+namespace: product-api-dev
+resources: [../../base, namespace.yaml]
+patches:
+  - target: {kind: Deployment, name: product-api}
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1

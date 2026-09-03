@@ -1,0 +1,31 @@
+name: Promote container image
+on:
+  repository_dispatch: {types: [image-published]}
+  workflow_dispatch:
+    inputs:
+      image: {description: 'Immutable container image digest', required: true, type: string}
+      environment: {description: 'Environment to promote', required: true, default: dev, type: choice, options: [dev, staging, production]}
+permissions: {contents: write}
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.client_payload.environment || inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select image and environment
+        id: values
+        run: |
+          echo "image=${{ github.event.client_payload.image || inputs.image }}" >> "$GITHUB_OUTPUT"
+          echo "environment=${{ github.event.client_payload.environment || inputs.environment }}" >> "$GITHUB_OUTPUT"
+      - uses: imranismail/setup-kustomize@v2
+      - name: Promote immutable image
+        run: |
+          cd "apps/product-api/overlays/${{ steps.values.outputs.environment }}"
+          kustomize edit set image "product-api=${{ steps.values.outputs.image }}"
+      - name: Commit promotion
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add apps/product-api/overlays
+          git diff --cached --quiet || git commit -m "Promote product-api to ${{ steps.values.outputs.environment }}"
+          git push
