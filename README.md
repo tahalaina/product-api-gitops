@@ -36,7 +36,12 @@ Prerequisites: Docker, kubectl, Helm, and a Kubernetes cluster (Kind, Minikube, 
    kubectl -n argocd wait --for=condition=Available deployment/argocd-server --timeout=300s
    ```
 
-3. Replace `REPOSITORY_URL` in `argocd/application-dev.yaml` with this repository URL, then apply the project and application.
+3. Apply the project and development application:
+
+   ```bash
+   kubectl apply -f argocd/project.yaml
+   kubectl apply -f argocd/application-dev.yaml
+   ```
 4. Check reconciliation:
 
    ```bash
