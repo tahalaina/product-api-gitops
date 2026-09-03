@@ -18,4 +18,4 @@ spec:
           startupProbe: {httpGet: {path: /actuator/health/liveness, port: http}, failureThreshold: 30, periodSeconds: 5}
           readinessProbe: {httpGet: {path: /actuator/health/readiness, port: http}, periodSeconds: 5}
           livenessProbe: {httpGet: {path: /actuator/health/liveness, port: http}, periodSeconds: 10}
-          resources: {requests: {cpu: 100m, memory: 256Mi}, limits: {cpu: '1', memory: 512Mi}}
+          resources: {requests: {cpu: 100m, memory: 512Mi}, limits: {cpu: '1', memory: 1Gi}}
