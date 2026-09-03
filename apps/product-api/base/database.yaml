@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:16-alpine
+          image: public.ecr.aws/docker/library/postgres:16-alpine
           ports: [{containerPort: 5432, name: postgres}]
           env:
             - {name: POSTGRES_DB, valueFrom: {secretKeyRef: {name: product-api-db, key: database}}}
