@@ -1,4 +1,4 @@
-resources: [deployment.yaml, service.yaml, database.yaml, database-secret.yaml]
+resources: [deployment.yaml, service.yaml, service-monitor.yaml, database.yaml, database-secret.yaml]
 images:
   - name: product-api
     newName: ghcr.io/tahalaina/product-api

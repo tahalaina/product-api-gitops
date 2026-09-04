@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: observability-collector
+  namespace: argocd
+spec:
+  project: product-api
+  source:
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-collector
+    targetRevision: 0.172.0
+    helm:
+      releaseName: otel-collector
+      values: |
+        mode: daemonset
+        image:
+          repository: otel/opentelemetry-collector-k8s
+        presets:
+          logsCollection:
+            enabled: true
+            storeCheckpoints: true
+          kubernetesAttributes:
+            enabled: true
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {memory: 256Mi}
+        config:
+          exporters:
+            otlp/tempo:
+              endpoint: tempo.observability.svc.cluster.local:4317
+              tls:
+                insecure: true
+            otlphttp/loki:
+              endpoint: http://loki-gateway.observability.svc.cluster.local/otlp
+          service:
+            pipelines:
+              traces:
+                receivers: [otlp]
+                processors: [memory_limiter, k8sattributes, batch]
+                exporters: [otlp/tempo]
+              logs:
+                receivers: [otlp, filelog]
+                processors: [memory_limiter, k8sattributes, batch]
+                exporters: [otlphttp/loki]
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true]

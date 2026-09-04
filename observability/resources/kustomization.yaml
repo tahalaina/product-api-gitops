@@ -1,0 +1,3 @@
+resources:
+  - dashboard-product-api.yaml
+  - prometheus-rules.yaml

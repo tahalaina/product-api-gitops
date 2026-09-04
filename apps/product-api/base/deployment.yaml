@@ -1,11 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: {name: product-api}
+metadata:
+  name: product-api
+  labels:
+    app.kubernetes.io/name: product-api
+    app.kubernetes.io/part-of: product-api
 spec:
   replicas: 2
   selector: {matchLabels: {app: product-api}}
   template:
-    metadata: {labels: {app: product-api}}
+    metadata:
+      labels:
+        app: product-api
+        app.kubernetes.io/name: product-api
+        app.kubernetes.io/part-of: product-api
     spec:
       containers:
         - name: product-api
@@ -15,6 +23,8 @@ spec:
             - {name: DATABASE_URL, value: jdbc:postgresql://postgres:5432/products}
             - {name: DATABASE_USERNAME, valueFrom: {secretKeyRef: {name: product-api-db, key: username}}}
             - {name: DATABASE_PASSWORD, valueFrom: {secretKeyRef: {name: product-api-db, key: password}}}
+            - {name: MANAGEMENT_OTLP_TRACING_ENDPOINT, value: http://otel-collector.observability.svc.cluster.local:4318/v1/traces}
+            - {name: MANAGEMENT_TRACING_SAMPLING_PROBABILITY, value: "1.0"}
           startupProbe: {httpGet: {path: /actuator/health/liveness, port: http}, failureThreshold: 30, periodSeconds: 5}
           readinessProbe: {httpGet: {path: /actuator/health/readiness, port: http}, periodSeconds: 5}
           livenessProbe: {httpGet: {path: /actuator/health/liveness, port: http}, periodSeconds: 10}
