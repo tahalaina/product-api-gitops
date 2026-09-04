@@ -2,4 +2,4 @@ resources: [deployment.yaml, service.yaml, service-monitor.yaml, database.yaml, 
 images:
   - name: product-api
     newName: ghcr.io/tahalaina/product-api
-    newTag: latest
+    newTag: 399dcc0
