@@ -23,8 +23,6 @@ spec:
             - {name: DATABASE_URL, value: jdbc:postgresql://postgres:5432/products}
             - {name: DATABASE_USERNAME, valueFrom: {secretKeyRef: {name: product-api-db, key: username}}}
             - {name: DATABASE_PASSWORD, valueFrom: {secretKeyRef: {name: product-api-db, key: password}}}
-            - {name: MANAGEMENT_OTLP_TRACING_ENDPOINT, value: http://otel-collector.observability.svc.cluster.local:4318/v1/traces}
-            - {name: MANAGEMENT_TRACING_SAMPLING_PROBABILITY, value: "1.0"}
           startupProbe: {httpGet: {path: /actuator/health/liveness, port: http}, failureThreshold: 30, periodSeconds: 5}
           readinessProbe: {httpGet: {path: /actuator/health/readiness, port: http}, periodSeconds: 5}
           livenessProbe: {httpGet: {path: /actuator/health/liveness, port: http}, periodSeconds: 10}

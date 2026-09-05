@@ -4,20 +4,15 @@ metadata:
   name: product-api
   namespace: argocd
 spec:
-  description: Product API GitOps applications and observability platform
+  description: Product API GitOps applications
   sourceRepos:
     - https://github.com/tahalaina/product-api-gitops.git
-    - https://prometheus-community.github.io/helm-charts
-    - https://grafana.github.io/helm-charts
-    - https://open-telemetry.github.io/opentelemetry-helm-charts
   destinations:
     - namespace: product-api-dev
       server: https://kubernetes.default.svc
     - namespace: product-api-staging
       server: https://kubernetes.default.svc
     - namespace: product-api-production
-      server: https://kubernetes.default.svc
-    - namespace: observability
       server: https://kubernetes.default.svc
     - namespace: kube-system
       server: https://kubernetes.default.svc
